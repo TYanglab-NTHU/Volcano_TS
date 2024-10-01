@@ -1,3 +1,8 @@
+# spherical coordinates in the mathematical convention
+# https://en.wikipedia.org/wiki/Spherical_coordinate_system
+# td 0 to 360 deg
+# pd 0 to 180 deg
+# r  0 to inf
 
 # Import basic Python modules
 import sys                      # IO Basics
@@ -21,8 +26,6 @@ from qmmm import fprintf
 inpf="/dicos_ui_home/tlankau/Structures/TingYi_Data/ABASEE_1/ABASEE-oxo_1_1_tpss_d4_lanl2dz_631gpol_Co3.opt.xyz"
 
 def scan_inverse(at, rad):
-  # td 0 to 360 deg
-  # pd 0 to 180 deg
   rs = 10000.0 # final rsults sum
   rl = []      # final results vector
   for td in range(0, 360, 5):
@@ -51,8 +54,6 @@ def scan_inverse(at, rad):
   return(rl, rs)
 
 def scan_simple_sum(at, rad):
-  # td 0 to 360 deg
-  # pd 0 to 180 deg
   rs = 0.0     # final rsults sum
   rl = []      # final results vector
   for td in range(0, 360, 5):
