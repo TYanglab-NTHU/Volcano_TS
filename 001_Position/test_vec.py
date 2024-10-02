@@ -43,8 +43,8 @@ def build_rot_mat(a, t):
 ################################################################################
 
 # Define both vectors
-target = np.array([0.0, 1.3, 1.3]) # z axis
-bond   = np.array([1.5, 1.5, 0.5]) # x axis
+target = np.array([0.0, 0.0, 1.0]) # z axis
+bond   = np.array([1.0, 0.0, 0.0]) # x axis
 print("Start geometries")
 print("target:", target)
 print("bond  :", bond)

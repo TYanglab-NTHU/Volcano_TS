@@ -1,0 +1,21 @@
+Start geometries
+target: [0. 0. 1.]
+bond  : [1. 0. 0.]
+
+Normalized vectors
+target: [0. 0. 1.]
+bond  : [1. 0. 0.]
+
+Rotation parameter
+angle: 1.5708 rad (90.0 deg)
+axis : [ 0. -1.  0.]
+
+Rotation matrix
+[[ 6.123234e-17 -0.000000e+00 -1.000000e+00]
+ [ 0.000000e+00  1.000000e+00 -0.000000e+00]
+ [ 1.000000e+00  0.000000e+00  6.123234e-17]]
+
+After rotation
+target    : [0. 0. 1.]
+bond      : [1. 0. 0.]
+new bond  : [6.123234e-17 0.000000e+00 1.000000e+00]
