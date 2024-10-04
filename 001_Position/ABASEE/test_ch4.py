@@ -16,10 +16,8 @@ from openbabel import openbabel as ob     # basic OpenBabel
 ob.obErrorLog.SetOutputLevel(0)           # suppress warnings
 
 # define control variables
-# xyz_folder = "/dicos_ui_home/tlankau/Structures/TingYi_Data/ABASEE_1/"
-# xyz_file   = "ABASEE-oxo_1_1_tpss_d4_lanl2dz_631gpol_Co3.opt.xyz"
-xyz_folder = "/dicos_ui_home/tlankau/Structures/TingYi_Data/RUHCON_2/"
-xyz_file   = "RUHCON-oxo_2_1_tpss_d4_lanl2dz_631gpol_Co3.opt.xyz"
+xyz_folder = "/dicos_ui_home/tlankau/Structures/TingYi_Data/ABASEE_1/"
+xyz_file = "ABASEE-oxo_1_1_tpss_d4_lanl2dz_631gpol_Co3.opt.xyz"
 
 ################################################################################
 

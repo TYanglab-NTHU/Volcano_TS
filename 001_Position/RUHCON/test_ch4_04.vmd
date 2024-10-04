@@ -1,0 +1,153 @@
+molecule delete all
+
+# load standard vmd extensions
+package require topotools   1.0
+
+# Override screen parameter for sspecial setup
+display resize 1024 1024
+display projection Orthographic
+axes location Off
+display depthcue off
+light 0 on
+light 1 on
+light 2 on
+light 3 on
+
+################################################################################
+# Dashed bonds                                                                 #
+################################################################################
+
+proc cylinder_bond {mid start end {capped 1}} {
+  # Select the atoms
+  set sel1 [atomselect $mid "index $start"] 
+  set sel2 [atomselect $mid "index $end"] 
+  # Get coordinates of start and end
+  lassign [$sel1 get {x y z}] pos1 
+  lassign [$sel2 get {x y z}] pos2
+  # Draw cylinder capped with spheres (capped = 1)
+  draw cylinder $pos1 $pos2 radius 0.1 resolution 10 filled yes
+  if {$capped == 1} {
+    draw sphere $pos1 radius 0.1 resolution 10
+    draw sphere $pos2 radius 0.1 resolution 10}}
+    
+proc dashed_bond {mid start end rad col} {  
+  set bond {}
+  lappend bond $start
+  lappend bond $end
+  set dist [measure bond $bond molid $mid]
+  set anz [expr floor($dist/0.4)]
+  set sel1 [atomselect $mid "index $start"] 
+  set sel2 [atomselect $mid "index $end"]
+  lassign [$sel1 get {x y z}] pos1 
+  lassign [$sel2 get {x y z}] pos2
+  set sstep [vecsub $pos2 $pos1]
+  set sstep [vecnorm $sstep]
+  set bstep $sstep
+  set sstep [vecscale 0.1 $sstep]
+  set bstep [vecscale 0.4 $bstep]
+  set acts $pos1
+  for {set i 0} {$i < $anz} {incr i} {
+    set acte [vecadd $acts $sstep]
+    draw color $col
+    draw cylinder $acts $acte radius ${rad} resolution 10 filled yes
+    draw sphere $acts radius ${rad} resolution 10
+    draw sphere $acte radius ${rad} resolution 10
+    set acts [vecadd $acts $bstep]}}
+
+proc dashed_bond_bi {mid start end rad cols cole} {
+
+  set sel1 [atomselect $mid "index $start"] 
+  set sel2 [atomselect $mid "index $end"]
+  lassign [$sel1 get {x y z}] pos1 
+  lassign [$sel2 get {x y z}] pos2
+  set cent [vecadd $pos1 $pos2]
+  set cent [vecscale 0.5 $cent]
+
+  set dist [vecdist $pos1 $pos2]
+  set anz [expr floor($dist/0.4)]
+  set sstep [vecsub $pos2 $pos1]
+  set sstep [vecnorm $sstep]
+  set bstep $sstep
+  set sstep [vecscale 0.1 $sstep]
+  set bstep [vecscale 0.4 $bstep]
+  set acts $pos1
+  for {set i 0} {$i < $anz} {incr i} {
+    if {$i < $anz/2} {
+      draw color $cols}\
+    else {
+      draw color $cole}
+    set acte [vecadd $acts $sstep]
+    draw cylinder $acts $acte radius $rad resolution 10 filled yes
+    draw sphere $acts radius $rad resolution 10
+    draw sphere $acte radius $rad resolution 10
+    set acts [vecadd $acts $bstep]}}
+
+################################################################################
+# Saving molecular plots as pixel graphics                                     #
+################################################################################
+
+# function to write a png file from povray
+proc p2p {} {
+  if { [file exists "combi.pov"] == 1 } {
+    file delete -force "combi.pov"}
+  if { [file exists "combi.png"] == 1 } {
+    file delete -force "combi.png"}
+  render POV3 "combi.pov" povray +MV3.6 +W4096 +H4096 -I%s -O%s.png +FN +UA +D +X +A +Q11
+  file rename "combi.pov.png" "combi.png"
+  file delete -force "combi.pov"}
+
+# function to write a tga file from povray
+proc p2t {} {
+  if { [file exists "combi.pov"] == 1 } {
+    file delete -force "combi.pov"}
+  if { [file exists "combi.png"] == 1 } {
+    file delete -force "combi.png"}
+  render POV3 "combi.pov" povray +W4096 +H4096 -I%s -O%s.tga +FT +UA +D +X +A +Q11
+  file rename "combi.pov.tga" "combi.tga"
+  file delete -force "combi.pov"}
+
+# function to write a png file from internal tachyon
+proc t2p {{base ""}} {
+  global name
+  if { [string equal $base ""] } {
+    set base $name}
+  if { [file exists "${name}.png"] == 1 } {
+    file delete -force "${name}.png"}
+  render TachyonInternal "${base}.png" -fullshade -auto_skylight 0.7 -aasamples 12 %s -format PNG -res 4048 4048 -o %s
+}
+
+################################################################################
+# Loading and plotting the molecule                                            #
+################################################################################
+
+# load molecule
+set name "test_ch4_04"
+molecule new "${name}.xyz" type {xyz} waitfor all volsets {0 }
+set molid [molinfo top get id]
+set file [molinfo $molid get name]
+puts "molid $molid  ->  $file"
+set rep -1
+
+# modify bond list to highlight the structure
+topo delbond 16 30
+dashed_bond_bi $molid 16 30 0.075 red white
+
+# modify 1st representation, all atoms
+incr rep
+molecule selection all
+molecule representation Licorice 0.100000 12.000000 12.000000
+molecule color Element
+molecule material Opaque
+molecule modrep $rep $molid
+molecule showrep $molid $rep 1
+
+# add another representation, aligned
+incr rep
+molecule selection index 0 16 30 29
+molecule representation CPK 1.000000 0.400000 15.000000 15.000000
+molecule color Element
+molecule material Opaque
+molecule addrep $molid
+molecule showrep $molid $rep 1
+
+molecule on $molid

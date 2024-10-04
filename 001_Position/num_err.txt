@@ -1,0 +1,23 @@
+OH vec [0.35318514 0.87416391 0.33331325]
+OC vec [0.35318514 0.87416391 0.33331325]
+dot product 1.0000000000000002
+arccos      nan
+
+old code (chatGPT)
+def vec_angle(v1, v2):
+  u1 = v1 / np.linalg.norm(v1)
+  u2 = v2 / np.linalg.norm(v2)
+  angle = np.arccos(np.dot(u1, u2))
+  return(angle)
+
+new code (by TL to capture num errors)
+def vec_angle(v1, v2):
+  u1 = v1 / np.linalg.norm(v1)
+  u2 = v2 / np.linalg.norm(v2)
+  dot_prod = np.dot(u1, u2)
+  if dot_prod >= 1.0:
+    return(0.0)
+  if dot_prod <= -1.0:
+    return(ma.pi)
+  angle = np.arccos(np.dot(u1, u2))
+  return(angle)
