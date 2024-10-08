@@ -125,10 +125,13 @@ printf("%s found at index: %i\n", metal_symbol, metal_idx)
 # locate ozygen atom of metal-oxygen bond
 for at in ob.OBAtomAtomIter(metal):
   if at.GetAtomicNum() == 8:
-    oxy = at
-    break
+    valence = at.GetTotalValence()
+    if valence == 1:
+      # print(valence)
+      oxy = at
+      break
 oxy_idx = oxy.GetIdx()
-printf("O atom at index %i\n", oxy_idx)
+printf("O atom (valence %i) at index %i\n", valence, oxy_idx)
 print()
 
 # get bond properties

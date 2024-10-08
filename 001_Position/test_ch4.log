@@ -2,7 +2,7 @@ RUHCON-oxo_2_1_tpss_d4_lanl2dz_631gpol_Co3.opt.xyz
 29 atoms read
 
 Co found at index: 1
-O atom at index 17
+O atom (valence 1) at index 17
 
 Properties of the Co1-O17 bond
 Bond vec   : [ 0.07970095 -1.6686148  -0.26759614]

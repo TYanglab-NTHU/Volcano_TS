@@ -1,0 +1,31 @@
+! uks tpss d4 lanl2dz scants tightscf
+! ri
+! mulliken xyzfile
+{% if mol.orbital_file == None %}{% else %}! moread
+
+%moinp "{{mol.orbital_file}}"{% endif %}
+
+%base "{{ mol.basename }}"
+
+%pal
+  nprocs {{ mol.nprocs }}
+end
+
+%maxcore {{ mol.maxcore }}
+
+%scf
+  maxiter 500
+  {% if mol.brokensym == None %}{% else %}{{ mol.brokensym }}{% endif %}
+end
+
+%basis
+{% if mol.nonheavy_atoms == None %}{% else %}{% for nonheavy_atom in mol.nonheavy_atoms %}  newgto {{ nonheavy_atom.name }} "{{ mol.basis_s }}" end{% endfor %}{% endif %}
+end
+
+%geom
+{% if mol.scants == None %}{% else %}{{ mol.scants }}{% endif %}
+end
+
+*xyzfile {{ mol.charge }} {{ mol.mult }} {{ mol.xyzf }} 
+
+

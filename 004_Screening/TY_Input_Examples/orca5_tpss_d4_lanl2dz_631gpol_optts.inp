@@ -1,0 +1,39 @@
+! uks tpss d4 lanl2dz optts tightscf
+! ri
+! normalprint uno
+{% if mol.orbital_file == None %}{% else %}! moread
+
+%moinp "{{mol.orbital_file}}"{% endif %}
+
+%base "{{ mol.basename }}"
+
+%pal
+  nprocs {{ mol.nprocs }}
+end
+
+%maxcore {{ mol.maxcore }}
+
+%scf
+  maxiter 500
+end
+
+%basis
+{% if mol.nonheavy_atoms == None %}{% else %}{% for nonheavy_atom in mol.nonheavy_atoms %}  newgto {{ nonheavy_atom.name }} "{{ mol.basis_s }}" end{% endfor %}{% endif %}
+end
+
+%geom
+{% if mol.hess == None %}{% else %}  inhess read
+  inhessname "{{ mol.hess }}"
+  TS_Mode { M {{ mol.tsmode }} } end{% endif %}
+{% if mol.hess_internal == None %}{% else %}  hess_internal
+    { {{mol.hess_internal}} }
+    xyz1 "{{mol.xyzf1}}"
+    gbw1 "{{mol.orbital_file1}}"
+    xyz2 "{{mol.xyzf2}}"
+    gbw2 "{{mol.orbital_file2}}"
+  end {% endif %}
+end
+
+*xyzfile {{ mol.charge }} {{ mol.mult }} {{ mol.xyzf }} 
+
+

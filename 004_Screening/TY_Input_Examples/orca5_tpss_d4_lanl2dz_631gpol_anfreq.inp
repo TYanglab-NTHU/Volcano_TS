@@ -1,0 +1,25 @@
+! uks tpss d4 lanl2dz anfreq tightscf xyzfile
+! ri
+{% if mol.orbital_file == None %}{% else %}! moread
+
+%moinp "{{mol.orbital_file}}"{% endif %}
+
+%base "{{ mol.basename }}"
+
+%pal
+  nprocs {{ mol.nprocs }}
+end
+
+%scf
+  maxiter 500
+end
+
+%maxcore {{ mol.maxcore }}
+
+%basis
+{% if mol.nonheavy_atoms == None %}{% else %}{% for nonheavy_atom in mol.nonheavy_atoms %}  newgto {{ nonheavy_atom.name }} "{{ mol.basis_s }}" end{% endfor %}{% endif %}
+end
+
+*xyzfile {{ mol.charge }} {{ mol.mult }} {{ mol.xyzf }} 
+
+
